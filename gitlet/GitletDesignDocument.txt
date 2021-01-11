@@ -1,0 +1,57 @@
+Project 2: Gitlet Design Document
+Authors: Maoqi Zhang, Jiaming Yuan, Judy Moon.
+------------------------------------
+
+***Classes and Data Structures***
+
+   1. Main
+      - Driver class
+      - Calls the corresponding function in the Gitlet class
+
+   2. Gitlet
+      - contains all of the functions for the gitlet commands
+
+   3. Commit: represents one commit. called when the user makes a commit. 
+      - hashMap <String, String> committedFiles: a hashMap that maps committed file names to the sha_1 of their contents
+      - String parent: the sha_1 of the parent parent of this commit
+      - String mergeParent: the sha_1 of the second parent of this commit, thus only the merge commits have this, otherwise Null.
+      - String message: message of this commit
+      - String time: time of this commit 
+      - String sha_1: sha_1 code of this serialized commit
+      - String branch: the branch that this commit is on
+   4. StagingArea: handles add and remove while also keeping track of the tracked files in this gitlet version control system.
+      - HashMap<String, String> stagingAdd: staging add area. A HashMap maps file names to the sha_1 code of its contents.
+      - HashSet<String> stagingRemove: staging remove area. A HashSet keeps track of the marked removed files.
+      - HashSet<String> trackedFiles: A HashSet contains all tracked file names.
+
+
+
+***Algorithms***
+
+The gitlet class will contain all the functions for the gitlet commands.
+   1. public void init() throws IOException; //Create a new gitlet version control system in current directory. It will throw IOException if there is already a gitlet version control system in currDirectory.
+   2. public void add(String filename) throws ClassNotFoundException, IOException; // Add copy of file as it currently exists to the staging area.
+   3. public void commit(String message); // Save a snapshot of certain files in the current commit and staging area so they can be restored at a later time, creating a new commit.
+   4. public void rm(String filename); //Unstage or remove the file if it is curre
+   ntly staged for addition.
+   5. public void log(); // Display information about each commit backwards.
+   6. public void globalLog(); // Like log, except displays information about all commits ever made.
+   7. public void find(String logMessage); //Print out the ids of all commits that have the given commit message, one per line.
+   8. public void status(); //Display what branches currently exist, and marks the current branch with a *.Also display what files have been staged for addition or removal. 
+   9. public void checkout(String filename) throws IOException;
+   10. public void checkout(String commitID, String filename) throws IOException;
+   11. public void branchCheckout(String branchName) throws IOException; // 9-11 illustrate three possible usages of checkout.
+   12. public void branch(String branchName); // Create a new branch with the given name, and points it at the current head node.
+   13. public void rmbranch(String branchName); // Delete the branch with the given name.
+   14. public void reset(String commitID) throws IOException; // Check out all the files tracked by the given commit. Remove tracked files that are not present in that commit.
+   15. public void merge(String branchName) throws IOException, ClassNotFoundException; // Merges files from the given branch into the current branch.
+      a) To help with merge, we would have a helper method to find the split point. 
+
+
+***Persistence***
+
+1. allFiles folder: stores all the added files. The file names are the sha_1 of their contents, and the file content is the serialized contents.
+2. branches folder: stores the branches we have. The file names are the branch names, and the content is the sha_1 codes of the current head commit for this branch.
+3. commits folder: stores all the serialized commits. The file names are the sha_1 codes of the serialized commits, and the file contents are simply the commits using the writeObject method.
+4. currBranch file: stores the current branch name that we are on. 
+5. head file: stores the sha_1 of the head commit.
